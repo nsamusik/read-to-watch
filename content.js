@@ -1,4 +1,4 @@
-// Read To Watch — Content Script (v0.4.3)
+// Read To Watch — Content Script (v0.4.4)
 // ------------------------------------------------------------
 // Hardened for production:
 //  • Audio tones: START before STOP (no InvalidStateError)
@@ -7,6 +7,7 @@
 //  • Gesture fallback: "Tap to enable mic" when Chrome blocks start()
 //  • Debug gate support via message: {type: "RTW_DEBUG_GATE"}
 //  • Confetti, progress tracking, screen time limit, optional retell
+//  • Fixed: onspeechend delay to prevent premature word errors (v0.4.4)
 // ------------------------------------------------------------
 (function () {
   'use strict';
@@ -81,6 +82,7 @@
   let recogShouldRun = false;
   let recogRestartAttempts = 0;
   const MAX_RESTARTS = 8;
+  let speechEndTimer = null;
 
   // ========== 2) STORAGE IO ==========
 
@@ -406,7 +408,7 @@
           </div>
         </div>
 
-        <div id="rtw-brand">Read To Watch v0.4.3 ✨</div>
+        <div id="rtw-brand">Read To Watch v0.4.4 ✨</div>
       </div>
     `;
     document.documentElement.appendChild(overlay);
@@ -588,6 +590,8 @@
     recogShouldRun = false;
     if (recog && recogActive) { try { recog.stop(); } catch (_) {} }
     recogActive = false;
+    // Clear any pending error timer
+    if (speechEndTimer) { clearTimeout(speechEndTimer); speechEndTimer = null; }
     const mic = document.getElementById('rtw-mic-indicator'); if (mic) mic.style.display = 'none';
     ensureGestureCTA(false);
   }
@@ -607,14 +611,31 @@
         if (res.isFinal) finalText += res[0].transcript + ' ';
       }
       if (finalText.trim().length) {
-        if (checkCurrentWord(finalText)) onWordCorrect();
+        if (checkCurrentWord(finalText)) {
+          // Clear any pending error timer since word was recognized
+          if (speechEndTimer) { clearTimeout(speechEndTimer); speechEndTimer = null; }
+          onWordCorrect();
+        }
       }
     };
     recog.onspeechstart = () => {
       const mic = document.getElementById('rtw-mic-indicator'); if (mic) mic.style.display = 'flex';
+      // Clear any pending error timer when new speech starts
+      if (speechEndTimer) { clearTimeout(speechEndTimer); speechEndTimer = null; }
     };
     recog.onspeechend = () => {
-      if (recogShouldRun && currentWordIndex < wordsArray.length) onWordError();
+      // Add delay to allow final results to be processed before marking as error
+      // This prevents false errors when the final result arrives after speechend event
+      if (recogShouldRun && currentWordIndex < wordsArray.length) {
+        const targetIndex = currentWordIndex;
+        speechEndTimer = setTimeout(() => {
+          // Only trigger error if still on the same word (word wasn't recognized in the meantime)
+          if (currentWordIndex === targetIndex && currentWordIndex < wordsArray.length) {
+            onWordError();
+          }
+          speechEndTimer = null;
+        }, 800); // 800ms delay to allow final results to arrive
+      }
     };
     recog.onend = () => {
       recogActive = false;
