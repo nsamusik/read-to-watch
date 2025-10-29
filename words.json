@@ -1,0 +1,78 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "CVC + early sight words",
+      "sentences": [
+        "The cat sat on the mat.",
+        "The dog can dig a big pit.",
+        "I see a red bus.",
+        "Mom had a cup of hot tea.",
+        "The sun is up.",
+        "Dad can fix the fan.",
+        "A pig is in the pen.",
+        "The bug is on the rug.",
+        "We can hop and run.",
+        "The kid hid in the bin.",
+        "Sam has a pet cat.",
+        "Ben can jam on a pan."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Short vowels + blends",
+      "sentences": [
+        "The best gift is a hug.",
+        "Frog jumps from the rock.",
+        "Grab the small drum and tap.",
+        "Clip the tag from the bag.",
+        "The crab fell in the trap.",
+        "The lamp glows on the desk.",
+        "Bring the flag up the mast.",
+        "Stop and plan the map path.",
+        "The sled slid past the log.",
+        "Snap the lid on the box."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Silent e + common digraphs",
+      "sentences": [
+        "Kate made a cake with dad.",
+        "The kite rose above the lake.",
+        "Shane wrote a note to Gabe.",
+        "A whale is safe in the cove.",
+        "Chase the cute pup home.",
+        "We take a bike ride at nine.",
+        "The light will shine at night.",
+        "She chose the white plate.",
+        "Pete can drive the big blue cube."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Long vowels + r-controlled",
+      "sentences": [
+        "The bird turned over the card.",
+        "Mark and Rose read a story by the fire.",
+        "We hear the deer near the stream.",
+        "A coin fell under the chair.",
+        "The farm horse moves over the barn yard.",
+        "Her smile shows more brave pride.",
+        "The car will start after the warm rain.",
+        "Four stars shine over our porch."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Sight phrases + two sentences",
+      "sentences": [
+        "Before we start, take a deep breath. Now read with me.",
+        "We can learn new words today. You will do great.",
+        "Look at the picture and think. Read what you see.",
+        "First sound it out slowly. Then read it smooth.",
+        "Try your best and do not rush. You are strong."
+      ]
+    }
+  ]
+}
